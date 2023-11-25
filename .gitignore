@@ -1,0 +1,5 @@
+*.sum
+*.env
+*.out
+cover.*
+log.txt
