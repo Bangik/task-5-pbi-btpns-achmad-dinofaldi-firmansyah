@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS photos (
+    id VARCHAR(255) PRIMARY KEY,
+    title VARCHAR(255) NULL,
+    caption VARCHAR(255) NULL,
+    url VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+)
