@@ -32,25 +32,29 @@ func LogRequestMiddleware(log *logrus.Logger) gin.HandlerFunc {
 	}
 
 	return func(ctx *gin.Context) {
-		endTime := time.Since(time.Now())
-		requestLog := RequestLog{
-			StartTime:  time.Now(),
-			EndTime:    endTime,
-			StatusCode: ctx.Writer.Status(),
-			ClientIP:   ctx.ClientIP(),
-			Method:     ctx.Request.Method,
-			Path:       ctx.Request.URL.Path,
-			UserAgent:  ctx.Request.UserAgent(),
-		}
+		startTime := time.Now()
+		defer func() {
+			endTime := time.Since(startTime)
+			requestLog := RequestLog{
+				StartTime:  startTime,
+				EndTime:    endTime,
+				StatusCode: ctx.Writer.Status(),
+				ClientIP:   ctx.ClientIP(),
+				Method:     ctx.Request.Method,
+				Path:       ctx.Request.URL.Path,
+				UserAgent:  ctx.Request.UserAgent(),
+			}
 
-		switch {
-		case ctx.Writer.Status() >= 500:
-			log.Error(requestLog)
-		case ctx.Writer.Status() >= 400:
-			log.Warn(requestLog)
-		default:
-			log.Info(requestLog)
-		}
+			switch {
+			case ctx.Writer.Status() >= 500:
+				log.Error(requestLog)
+			case ctx.Writer.Status() >= 400:
+				log.Warn(requestLog)
+			default:
+				log.Info(requestLog)
+			}
+		}()
 
+		ctx.Next()
 	}
 }
