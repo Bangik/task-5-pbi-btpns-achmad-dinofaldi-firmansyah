@@ -13,7 +13,7 @@ import (
 type UserUseCase interface {
 	Register(user model.User) error
 	Login(userCredential model.UserCredential) (string, error)
-	FindById(id string) (model.User, error)
+	FindById(id string) (model.UserResponse, error)
 	Update(user model.User) error
 	Delete(user model.User) error
 }
@@ -57,7 +57,7 @@ func (u *userUseCase) Login(userCredential model.UserCredential) (string, error)
 	return token, nil
 }
 
-func (u *userUseCase) FindById(id string) (model.User, error) {
+func (u *userUseCase) FindById(id string) (model.UserResponse, error) {
 	return u.userRepository.FindById(id)
 }
 
