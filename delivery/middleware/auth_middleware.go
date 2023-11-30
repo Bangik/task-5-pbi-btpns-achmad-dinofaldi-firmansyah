@@ -44,15 +44,32 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if claims["id"] != c.Param("id") {
-			c.JSON(http.StatusForbidden, gin.H{
-				"error": "You don't have permission to access this resource",
+		c.Set("claims", claims)
+		c.Next()
+	}
+}
+
+func AuthorizationMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := security.GetIdFromToken(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"status": "failed",
+				"error":  "invalid token " + err.Error(),
 			})
 			c.Abort()
 			return
 		}
 
-		c.Set("claims", claims)
+		if id != c.Param("id") {
+			c.JSON(http.StatusForbidden, gin.H{
+				"status": "failed",
+				"error":  "You don't have permission to access this resource",
+			})
+			c.Abort()
+			return
+		}
+
 		c.Next()
 	}
 }

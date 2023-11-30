@@ -22,6 +22,7 @@ type appServer struct {
 func (a *appServer) initController() {
 	a.engine.Use(middleware.LogRequestMiddleware(a.log))
 	controller.NewUserController(a.engine, a.usecaseManager.UserUseCase())
+	controller.NewPhotoController(a.engine, a.usecaseManager.PhotoUseCase())
 }
 
 func (a *appServer) Run() {
