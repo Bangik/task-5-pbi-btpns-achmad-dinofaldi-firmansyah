@@ -6,6 +6,7 @@ import (
 	"task-5-pbi-btpns-achmad-dinofaldi-firmansyah/model"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -56,4 +57,16 @@ func VerifyAccessToken(tokenString string) (jwt.MapClaims, error) {
 		return nil, fmt.Errorf("Invalid token MapClaims")
 	}
 	return claims, nil
+}
+
+func GetIdFromToken(c *gin.Context) (string, error) {
+	claims, ok := c.Get("claims")
+	if !ok {
+		return "", fmt.Errorf("Failed to get id from token")
+	}
+
+	claimsMap := claims.(jwt.MapClaims)
+	id := claimsMap["id"].(string)
+
+	return id, nil
 }
