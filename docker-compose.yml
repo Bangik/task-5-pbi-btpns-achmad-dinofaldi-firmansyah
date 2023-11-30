@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: host=task-5-pbi-btpns-achmad-dinofaldi-firmansyah-db-1 user=postgres password=postgres dbname=mydb port=5432 sslmode=disable
+      API_HOST: 
+      API_PORT: 
+      APP_TOKEN_NAME: 
+      APP_TOKEN_KEY: 
+      APP_TOKEN_EXPIRE: 
+      AWS_ACCESS_KEY_ID: 
+      AWS_SECRET_ACCESS_KEY: 
+      AWS_DEFAULT_REGION: 
+      AWS_BUCKET: 
+      AWS_URL: 
+      AWS_USE_PATH_STYLE_ENDPOINT: false
+      AWS_OBJECT_URL: 
+    depends_on:
+      - db
+
+volumes:
+  db-data:
